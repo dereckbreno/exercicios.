@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista dinâmica</title>
+</head>
+<body>
+  <h2>Lista de Cores</h2>
+  <ul id="lista"></ul>
+  <script>
+    // 1. Criar array de cores
+    const cores = ["vermelho", "verde", "azul"];
+
+    // 2. Pegar a <ul> do HTML
+    const lista = document.getElementById("lista");
+
+    // 3. Percorrer cada cor e criar <li>
+    cores.forEach(cor => {
+      const item = document.createElement("li"); // cria um <li>
+      item.textContent = cor; // coloca o nome da cor dentro do <li>
+      lista.appendChild(item); // adiciona o <li> dentro da <ul>
+
+      // desafio extra: mudar cor de fundo ao clicar
+      item.addEventListener("click", () => {
+        document.body.style.backgroundColor = cor;
+      });
+    });function criarListaDeCores(cores, idLista) {
+  const lista = document.getElementById(idLista);
+  lista.innerHTML = ""; // Limpa a lista antes de adicionar
+
+  cores.forEach(cor => {
+    const item = document.createElement("li");
+    item.textContent = cor.nome;
+    item.addEventListener("click", () => {
+      document.body.style.backgroundColor = cor.valor;
+    });
+    lista.appendChild(item);
+  });
+}
+
+  </script>
+</body>
+</html>
