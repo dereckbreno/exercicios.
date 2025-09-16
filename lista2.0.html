@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista Dinâmica de Cores</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+      padding: 20px;
+      transition: background-color 0.5s ease;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      font-size: 28px;
+    }
+    
+    .input-section {
+      display: flex;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    
+    input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    button {
+      padding: 12px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #2980b9;
+    }
+    
+    ul {
+      list-style-type: none;
+      margin-top: 20px;
+    }
+    
+    li {
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      color: white;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    
+    li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .delete-btn {
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .delete-btn:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+    
+    .instructions {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .instructions h3 {
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    
+    .instructions ul {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      color: #333;
+      text-shadow: none;
+      padding: 5px 0;
+      cursor: auto;
+    }
+    
+    .instructions li:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Lista de Cores</h2>
+    
+    <div class="input-section">
+      <input type="text" id="novaCor" placeholder="Digite uma nova cor (nome ou código HEX)" />
+      <button onclick="adicionarCor()">Adicionar Cor</button>
+    </div>
+    
+    <ul id="lista"></ul>
+    
+    <div class="instructions">
+      <h3>Instruções:</h3>
+      <p>Clique em uma cor para alterar o fundo da página.</p>
+      <p>Use o botão "X" para remover uma cor da lista.</p>
+      <p>Você pode adicionar cores pelo nome (em inglês) ou código HEX (com #).</p>
+      <p>Exemplos de cores válidas: red, blue, green, #ff0000, #00ff00, #0000ff</p>
+    </div>
+  </div>
+
+  <script>
+    // Array inicial de cores
+    let cores = ["red", "green", "blue", "purple", "orange"];
+    
+    // Elementos do DOM
+    const listaElement = document.getElementById("lista");
+    const inputElement = document.getElementById("novaCor");
+    
+    // Função para inicializar a lista
+    function inicializarLista() {
+      // Limpa a lista atual
+      listaElement.innerHTML = '';
+      
+      // Adiciona cada cor à lista
+      cores.forEach(cor => {
+        adicionarItemLista(cor);
+      });
+    }
+    
+    // Função para adicionar um item à lista
+    function adicionarItemLista(cor) {
+      const item = document.createElement("li");
+      item.textContent = cor;
+      item.style.backgroundColor = cor;
+      
+      // Adiciona botão de remover
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "X";
+      deleteBtn.classList.add("delete-btn");
+      deleteBtn.onclick = (e) => {
+        e.stopPropagation(); // Impede que o clique no botão dispare o evento do li
+        removerCor(cor);
+      };
+      
+      item.appendChild(deleteBtn);
+      
+      // Adiciona evento de clique para mudar a cor de fundo
+      item.addEventListener("click", () => {
+        document.body.style.backgroundColor = cor;
+      });
+      
+      listaElement.appendChild(item);
+    }
+    
+    // Função para adicionar uma nova cor
+    function adicionarCor() {
+      const novaCor = inputElement.value.trim();
+      
+      if (novaCor) {
+        // Verifica se a cor é válida
+        const tempElement = document.createElement("div");
+        tempElement.style.backgroundColor = novaCor;
+        document.body.appendChild(tempElement);
+        const isValidColor = tempElement.style.backgroundColor !== "";
+        document.body.removeChild(tempElement);
+        
+        if (isValidColor) {
+          // Adiciona a cor ao array e à lista
+          cores.push(novaCor);
+          adicionarItemLista(novaCor);
+          inputElement.value = ""; // Limpa o campo de entrada
+        } else {
+          alert("Por favor, insira uma cor válida (nome em inglês ou código HEX com #)");
+        }
+      } else {
+        alert("Por favor, digite uma cor");
+      }
+    }
+    
+    // Função para remover uma cor
+    function removerCor(cor) {
+      // Remove a cor do array
+      cores = cores.filter(c => c !== cor);
+      
+      // Reconstroi a lista
+      inicializarLista();
+    }
+    
+    // Permitir adicionar cor pressionando Enter
+    inputElement.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        adicionarCor();
+      }
+    });
+    
+    // Inicializa a lista quando a página carrega
+    document.addEventListener("DOMContentLoaded", inicializarLista);
+  </script>
+</body>
+</html>
